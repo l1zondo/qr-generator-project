@@ -12,33 +12,32 @@ qrText.addEventListener("input", handleQRText);
 sizes.addEventListener("change", handleSize);
 shareBtn.addEventListener("click", handleShare);
 
-const defaultUrl = "https://www.instagram.com/dolman.ar/";
+const defaultUrl = "https://youtube.com/@AsmrProg";
 let colorLight = "#fff",
     colorDark = "#000",
     text = defaultUrl,
     size = 300;
 
-function handleDarkColor(e){
-    colorDark = e.target.value,
+function handleDarkColor(e) {
+    colorDark = e.target.value;
     generateQRCode();
 }
 
-function handleLightColor(e){
-    colorLight = e.target.value,
+function handleLightColor(e) {
+    colorLight = e.target.value;
     generateQRCode();
 }
 
-
-function handleQRText(e){
+function handleQRText(e) {
     const value = e.target.value;
     text = value;
-    if (!value){
+    if (!value) {
         text = defaultUrl;
     }
-    generateQRCode()
+    generateQRCode();
 }
 
-async function generateQRCode(){
+async function generateQRCode() {
     qrContainer.innerHTML = "";
     new QRCode("qr-code", {
         text,
@@ -50,11 +49,11 @@ async function generateQRCode(){
     download.href = await resolveDataUrl();
 }
 
-async function handleShare(){
-    setTimeout(async()=>{
-        try{
-            const base64url =await resolveDataUrl();
-            const blob = awati (await fetch(base64url)).blob();
+async function handleShare() {
+    setTimeout(async () => {
+        try {
+            const base64url = await resolveDataUrl();
+            const blob = await (await fetch(base64url)).blob();
             const file = new File([blob], "QRCode.png", {
                 type: blob.type,
             });
@@ -62,27 +61,28 @@ async function handleShare(){
                 files: [file],
                 title: text,
             });
-        }catch (error){
-            alert("Your browser doesn't support sharing");
+        } catch (error) {
+            alert("Your browser doesn't support sharing.");
         }
     }, 100);
 }
-function handleSize(e){
+
+function handleSize(e) {
     size = e.target.value;
     generateQRCode();
 }
 
-function resolveDataUrl(){
-    return new Promise ((resolve,reject) =>{
-        setTimeout(()=>{
+function resolveDataUrl() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
             const img = document.querySelector("#qr-code img");
-            if(img.currentSrc){
+            if (img.currentSrc) {
                 resolve(img.currentSrc);
                 return;
             }
             const canvas = document.querySelector("canvas");
             resolve(canvas.toDataURL());
         }, 50);
-    })
+    });
 }
 generateQRCode();
